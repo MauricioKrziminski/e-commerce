@@ -1,91 +1,160 @@
 'use client'
-
+import React, { useState } from 'react'
+import { FiMenu, FiSearch, FiX } from 'react-icons/fi'
+import { AiOutlineUser, AiOutlineShoppingCart } from 'react-icons/ai'
 import Link from 'next/link'
-import { useState } from 'react'
-import { FaSearch, FaShoppingBag, FaUser } from 'react-icons/fa'
 
 export function Header() {
-  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [hoverUser, setHoverUser] = useState(false)
+  const [hoverCart, setHoverCart] = useState(false)
 
   return (
-    <nav className="bg-black shadow">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-20 justify-between">
-          <div className="flex">
-            <div className="flex flex-shrink-0 items-center text-white">
-              <Link href="/">Logo</Link>
-            </div>
-          </div>
-          <div className="hidden sm:ml-6 sm:flex sm:items-center">
-            <div className="relative">
+    <div className="relative">
+      {isSearchOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-black opacity-50"
+          onClick={() => setIsSearchOpen(false)}
+        ></div>
+      )}
+
+      <header className="z-30 bg-black shadow-md">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-20 items-center justify-between">
+            <div className="flex items-center">
               <button
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="text-white hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                className="z-30 mr-8 text-white md:hidden"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
-                Drops
+                {isMenuOpen ? (
+                  <FiX className="h-7 w-7" />
+                ) : (
+                  <FiMenu className="h-7 w-7" />
+                )}
               </button>
-              {dropdownOpen && (
-                <div className="absolute z-10 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-                  <div
-                    className="py-1"
-                    role="menu"
-                    aria-orientation="vertical"
-                    aria-labelledby="options-menu"
-                  >
-                    <Link href="/drop-1">
-                      <div
-                        className="block cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        role="menuitem"
-                      >
-                        Drop 1
-                      </div>
-                    </Link>
-                    <Link href="/drop-2">
-                      <div
-                        className="block cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        role="menuitem"
-                      >
-                        Drop 2
-                      </div>
-                    </Link>
-                    <Link href="/drop-3">
-                      <div
-                        className="block cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        role="menuitem"
-                      >
-                        Drop 3
-                      </div>
-                    </Link>
-                    {/* Adicione mais itens conforme necessário */}
-                  </div>
-                </div>
-              )}
+              <Link href="/">
+                <h1 className="text-2xl font-bold text-white">Logo</h1>
+              </Link>
             </div>
-          </div>
-          <div className="flex items-center">
-            <button
-              type="button"
-              className="rounded-full p-1 text-white hover:text-gray-500 focus:outline-none"
-            >
-              <FaSearch className="h-6 w-6" aria-hidden="true" />
-            </button>
-
-            <Link href="/login">
-              <div className="ml-5 flex cursor-pointer items-center text-white hover:text-gray-500">
-                <FaUser className="h-6 w-6" aria-hidden="true" />
-                <span>Minha conta</span>
+            <nav className="ml-40 hidden grow items-center justify-center md:flex">
+              <Link href="/drops">
+                <span className="text-lg text-white hover:text-gray-500">
+                  Drops
+                </span>
+              </Link>
+              <Link href="/streetwear">
+                <span className="mx-4 text-lg text-white hover:text-gray-500">
+                  Streetwear
+                </span>
+              </Link>
+              <Link href="/sneakers">
+                <span className="text-lg text-white hover:text-gray-500">
+                  Sneakers
+                </span>
+              </Link>
+              <Link href="/marcas">
+                <span className="mx-4 text-lg text-white hover:text-gray-500">
+                  Marcas
+                </span>
+              </Link>
+            </nav>
+            <div className="flex items-center space-x-6">
+              <FiSearch
+                className="h-6 w-6 cursor-pointer text-white hover:text-gray-500 lg:h-8 lg:w-8"
+                onClick={() => setIsSearchOpen(true)}
+              />
+              <div
+                onMouseEnter={() => setHoverUser(true)}
+                onMouseLeave={() => setHoverUser(false)}
+                className="flex items-center"
+              >
+                <AiOutlineUser
+                  className={`h-6 w-6 lg:h-9 lg:w-9 ${hoverUser ? 'text-gray-500' : 'text-white'}`}
+                />
+                <div>
+                  <Link href="/login">
+                    <span className="flex flex-col">
+                      <span className="hidden text-sm text-white md:block">
+                        Minha conta
+                      </span>
+                      <span className="ml-1 hidden text-xs text-white md:block">
+                        Conecte-se
+                      </span>
+                    </span>
+                  </Link>
+                </div>
               </div>
-            </Link>
-
-            <Link href="/cart">
-              <div className="ml-5 flex cursor-pointer items-center text-white hover:text-gray-500">
-                <FaShoppingBag className="h-6 w-6" aria-hidden="true" />
-                <span>Carrinho</span>
+              <div
+                onMouseEnter={() => setHoverCart(true)}
+                onMouseLeave={() => setHoverCart(false)}
+                className="flex items-center"
+              >
+                <AiOutlineShoppingCart
+                  className={`h-6 w-6 lg:h-9 lg:w-9 ${hoverCart ? 'text-gray-500' : 'text-white'}`}
+                />
+                <div className="ml-1">
+                  <Link href="/carrinho">
+                    <span className="flex flex-col">
+                      <span className="hidden text-sm text-white md:block">
+                        Carrinho
+                      </span>
+                      <span className="ml-1 hidden text-xs text-white md:block">
+                        R$ 0,00
+                      </span>
+                    </span>
+                  </Link>
+                </div>
               </div>
-            </Link>
+            </div>
           </div>
         </div>
+      </header>
+      {isSearchOpen && (
+        <div className="fixed top-0 z-40 w-full bg-black">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-36">
+            <div className="flex h-20 items-center justify-between">
+              <input
+                className="flex-grow rounded-md px-4 py-2 outline-none"
+                type="text"
+                placeholder="Pesquisar..."
+              />
+              <FiX
+                className="ml-2 h-6 w-6 cursor-pointer text-white hover:text-gray-500 lg:h-8 lg:w-8"
+                onClick={() => setIsSearchOpen(false)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+      <div
+        className={`fixed top-20 ${isMenuOpen ? 'left-0' : '-left-full'} z-20 h-full w-full bg-white/70 transition-all duration-300 md:hidden`}
+      >
+        <nav>
+          <ul className="flex flex-col items-start space-y-4 pl-4 pt-10">
+            <li>
+              <Link href="/drops">
+                <span className="text-lg text-black">Drops</span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/streetwear">
+                <span className="text-lg text-black">Streetwear</span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/sneakers">
+                <span className="text-lg text-black">Sneakers</span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/marcas">
+                <span className="text-lg text-black">Marcas</span>
+              </Link>
+            </li>
+          </ul>
+        </nav>
       </div>
-    </nav>
+    </div>
   )
 }
