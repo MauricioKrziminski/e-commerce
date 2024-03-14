@@ -2,6 +2,9 @@
 import React, { useState } from 'react'
 import { FiMenu, FiSearch, FiX } from 'react-icons/fi'
 import { AiOutlineUser, AiOutlineShoppingCart } from 'react-icons/ai'
+import { SearchBar } from './searchBar'
+import { MobileSidebar } from './mobileSidebar'
+import { DropdownMenu } from './dropdownMenu'
 import Link from 'next/link'
 
 export function Header() {
@@ -12,13 +15,6 @@ export function Header() {
 
   return (
     <div className="relative">
-      {isSearchOpen && (
-        <div
-          className="fixed inset-0 z-20 bg-black opacity-50"
-          onClick={() => setIsSearchOpen(false)}
-        ></div>
-      )}
-
       <header className="z-30 bg-black shadow-md">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-20 items-center justify-between">
@@ -34,31 +30,41 @@ export function Header() {
                 )}
               </button>
               <Link href="/">
-                <h1 className="text-2xl font-bold text-white">Logo</h1>
+                <span>
+                  <h1 className="mr-8 text-2xl font-bold text-white">Logo</h1>
+                </span>
               </Link>
             </div>
-            <nav className="ml-40 hidden grow items-center justify-center md:flex">
-              <Link href="/drops">
-                <span className="text-lg text-white hover:text-gray-500">
-                  Drops
-                </span>
-              </Link>
-              <Link href="/streetwear">
-                <span className="mx-4 text-lg text-white hover:text-gray-500">
-                  Streetwear
-                </span>
-              </Link>
-              <Link href="/sneakers">
-                <span className="text-lg text-white hover:text-gray-500">
-                  Sneakers
-                </span>
-              </Link>
-              <Link href="/marcas">
-                <span className="mx-4 text-lg text-white hover:text-gray-500">
-                  Marcas
-                </span>
-              </Link>
-            </nav>
+            <div className="ml-18 hidden items-center space-x-6 md:flex">
+              <DropdownMenu
+                title="DROPS"
+                items={[
+                  { name: 'NOVOS PRODUTOS', path: '/produtos/novos' },
+                  { name: 'CATEGORIAS', path: '/produtos/categorias' },
+                ]}
+              />
+              <DropdownMenu
+                title="STREETWEAR"
+                items={[
+                  { name: 'ACESSÓRIOS', path: '/produtos/acessorios' },
+                  { name: 'ROUPAS', path: '/produtos/roupas' },
+                ]}
+              />
+              <DropdownMenu
+                title="SNKEAKERS"
+                items={[
+                  { name: 'NIKE', path: '/produtos/shapes' },
+                  { name: 'ADIDAS', path: '/produtos/trucks' },
+                ]}
+              />
+              <DropdownMenu
+                title="MARCAS"
+                items={[
+                  { name: 'NACIONAIS', path: '/produtos/nike' },
+                  { name: 'INTERNACIONAIS', path: '/produtos/adidas' },
+                ]}
+              />
+            </div>
             <div className="flex items-center space-x-6">
               <FiSearch
                 className="h-6 w-6 cursor-pointer text-white hover:text-gray-500 lg:h-8 lg:w-8"
@@ -110,51 +116,8 @@ export function Header() {
           </div>
         </div>
       </header>
-      {isSearchOpen && (
-        <div className="fixed top-0 z-40 w-full bg-black">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-36">
-            <div className="flex h-20 items-center justify-between">
-              <input
-                className="flex-grow rounded-md px-4 py-2 outline-none"
-                type="text"
-                placeholder="Pesquisar..."
-              />
-              <FiX
-                className="ml-2 h-6 w-6 cursor-pointer text-white hover:text-gray-500 lg:h-8 lg:w-8"
-                onClick={() => setIsSearchOpen(false)}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-      <div
-        className={`fixed top-20 ${isMenuOpen ? 'left-0' : '-left-full'} z-20 h-full w-full bg-white/70 transition-all duration-300 md:hidden`}
-      >
-        <nav>
-          <ul className="flex flex-col items-start space-y-4 pl-4 pt-10">
-            <li>
-              <Link href="/drops">
-                <span className="text-lg text-black">Drops</span>
-              </Link>
-            </li>
-            <li>
-              <Link href="/streetwear">
-                <span className="text-lg text-black">Streetwear</span>
-              </Link>
-            </li>
-            <li>
-              <Link href="/sneakers">
-                <span className="text-lg text-black">Sneakers</span>
-              </Link>
-            </li>
-            <li>
-              <Link href="/marcas">
-                <span className="text-lg text-black">Marcas</span>
-              </Link>
-            </li>
-          </ul>
-        </nav>
-      </div>
+      <SearchBar isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} />
+      <MobileSidebar isOpen={isMenuOpen} />
     </div>
   )
 }
