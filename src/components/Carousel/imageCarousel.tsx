@@ -1,85 +1,79 @@
-/* eslint-disable @next/next/no-img-element */
 'use client'
-import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { FiChevronLeft, FiChevronRight, FiPause, FiPlay } from 'react-icons/fi'
+/* eslint-disable @next/next/no-img-element */
+import { useState, useEffect, useCallback } from 'react'
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 
-interface ImageCarouselProps {
-  images: string[]
-}
+export function ImageCarousel() {
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const images = [
+    'https://i.imgur.com/Z0FZsHU.jpg',
+    'https://i.imgur.com/X30TFyJ.jpg',
+    'https://i.imgur.com/jrx6VDs.jpg',
+  ]
 
-export function ImageCarousel({ images }: ImageCarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [isPlaying, setIsPlaying] = useState(true)
-  const slideShowInterval = useRef<NodeJS.Timeout | null>(null)
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prevSlide) => (prevSlide + 1) % images.length)
+  }, [images.length])
 
-  const stopSlideShow = useCallback(() => {
-    if (slideShowInterval.current) {
-      clearInterval(slideShowInterval.current)
-      slideShowInterval.current = null
-    }
+  const prevSlide = useCallback(() => {
+    setCurrentSlide(
+      (prevSlide) => (prevSlide + images.length - 1) % images.length,
+    )
+  }, [images.length])
+
+  const goToSlide = useCallback((index: number) => {
+    setCurrentSlide(index)
   }, [])
 
-  const startSlideShow = useCallback(() => {
-    stopSlideShow()
-    if (isPlaying) {
-      slideShowInterval.current = setInterval(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
-      }, 5000)
-    }
-  }, [isPlaying, images.length, stopSlideShow])
-
   useEffect(() => {
-    startSlideShow()
-    return () => stopSlideShow()
-  }, [startSlideShow, stopSlideShow])
+    const interval = setInterval(() => {
+      nextSlide()
+    }, 5000)
 
-  const goToPrevious = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1,
-    )
-    if (!isPlaying) {
-      setIsPlaying(true)
-    }
-  }
-
-  const goToNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
-    if (!isPlaying) {
-      setIsPlaying(true)
-    }
-  }
-
-  const togglePlay = () => {
-    setIsPlaying(!isPlaying)
-  }
+    return () => clearInterval(interval)
+  }, [nextSlide])
 
   return (
-    <div className="relative">
-      {images[currentIndex] && (
-        <img src={images[currentIndex]} alt="carousel" className="w-full" />
-      )}
-      <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 transform items-center">
-        <FiChevronLeft
-          onClick={goToPrevious}
-          className="mb-4 ml-20 mr-4 h-4 w-4 cursor-pointer"
-        />
-        {images.map((_, index) => (
+    <div className="relative w-full">
+      <div className="relative h-56 overflow-hidden md:h-[500px] lg:h-[650px]">
+        {images.map((image, index) => (
           <div
-            key={index}
-            className={`mx-1 mb-4 h-4 w-4 rounded-full ${currentIndex === index ? 'bg-blue-600' : 'bg-gray-400'}`}
-            onClick={() => setCurrentIndex(index)}
-          ></div>
+            key={image}
+            className={`duration-700 ease-in-out ${index === currentSlide ? 'block' : 'hidden'}`}
+            data-carousel-item
+          >
+            <img
+              src={image}
+              className="absolute left-1/2 top-1/2 block w-full -translate-x-1/2 -translate-y-1/2"
+              alt="..."
+            />
+          </div>
         ))}
-        <FiChevronRight
-          onClick={goToNext}
-          className="mb-4 ml-4 h-4 w-4 cursor-pointer"
-        />
-        {isPlaying ? (
-          <FiPause onClick={togglePlay} className="mb-4 ml-20 cursor-pointer" />
-        ) : (
-          <FiPlay onClick={togglePlay} className="mb-4 ml-20 cursor-pointer" />
-        )}
       </div>
+      <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 space-x-2">
+        {images.map((_, index) => (
+          <button
+            key={index}
+            className={`h-3 w-3 rounded-full ${index === currentSlide ? 'bg-white' : 'bg-gray-400'}`}
+            onClick={() => goToSlide(index)}
+            aria-label={`Slide ${index + 1}`}
+          ></button>
+        ))}
+      </div>
+      <button
+        onClick={prevSlide}
+        className="group absolute start-0 top-44 z-30 flex cursor-pointer items-center px-4 hover:bg-gray-500 focus:outline-none"
+      >
+        <IoIosArrowBack className="text-2xl text-white" />
+        <span className="sr-only">Previous</span>
+      </button>
+      <button
+        onClick={nextSlide}
+        className="group absolute end-0 top-72 z-30 flex cursor-pointer items-center rounded-full px-4 hover:bg-gray-500 focus:outline-none"
+      >
+        <IoIosArrowForward className="text-2xl text-white" />
+        <span className="sr-only">Next</span>
+      </button>
     </div>
   )
 }

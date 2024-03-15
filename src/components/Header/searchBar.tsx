@@ -22,7 +22,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isOpen, setIsOpen }) => {
           <div className="relative w-full max-w-4xl bg-orange-600">
             <input
               ref={inputRef}
-              className="w-full rounded-md py-2 pl-4 pr-10 outline-none"
+              className="w-full rounded-md py-2 pl-4 pr-10 focus:outline-none"
               type="text"
               placeholder="Pesquisar..."
             />
