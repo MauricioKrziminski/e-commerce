@@ -19,7 +19,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isOpen, setIsOpen }) => {
     <>
       {isOpen && (
         <div className="fixed top-0 z-40 flex w-full items-center justify-center bg-black p-4">
-          <div className="relative w-full max-w-4xl bg-orange-600">
+          <div className="relative w-full max-w-4xl">
             <input
               ref={inputRef}
               className="w-full rounded-md py-2 pl-4 pr-10 focus:outline-none"

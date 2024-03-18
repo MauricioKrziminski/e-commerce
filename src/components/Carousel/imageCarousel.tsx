@@ -43,7 +43,7 @@ export function ImageCarousel() {
   return (
     <div className="relative w-full overflow-hidden">
       <div
-        className="flex h-[450px] w-full md:h-[500px] lg:h-[750px]"
+        className="flex h-[450px] w-full md:h-[500px] lg:h-[780px]"
         style={slideStyle}
       >
         {images.map((image, index) => (
