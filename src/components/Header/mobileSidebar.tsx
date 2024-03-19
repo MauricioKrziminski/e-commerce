@@ -16,7 +16,7 @@ const subcategories = {
 
 type CategoryName = keyof typeof subcategories
 
-export const MobileSidebar: React.FC<MobileSidebarProps> = ({ isOpen }) => {
+export function MobileSidebar({ isOpen }: MobileSidebarProps) {
   const [activeCategory, setActiveCategory] = useState<CategoryName | null>(
     null,
   )
